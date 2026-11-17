@@ -5,7 +5,7 @@ export const DEFAULT_API_TOKEN_ENV = 'CLOUDFLARE_API_TOKEN'
 export const DEFAULT_NPM_TOKEN_ENV = 'NPM_TOKEN'
 
 /** Host settings namespace; the Web card is keyed on the same string. */
-export const DEPLOY_SETTINGS_NS = 'dsh-plugin-deploy'
+export const DEPLOY_SETTINGS_NS = 'dsh-plugin-safe-deploy'
 
 export interface Config {
   /** Credential reference name only — never the token value. */

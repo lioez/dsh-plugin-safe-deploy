@@ -3,7 +3,7 @@ import { Config, readConfig, type Config as ConfigValue, type RuntimeConfig } fr
 import { createPublishCommand, createPublishTool } from './publish-tool.ts'
 import { createDeployCommand, createDeployTool } from './tool.ts'
 
-export const name = 'dsh-plugin-deploy'
+export const name = 'dsh-plugin-safe-deploy'
 
 export const inject = [
   'tools',
@@ -26,6 +26,7 @@ export { parseWranglerOutput } from './parse.ts'
 export { redactSecrets } from './redact.ts'
 export { selectMode } from './mode.ts'
 export { runDeploy, hintFromOutput } from './deploy.ts'
+export { runPreflight } from './preflight.ts'
 export { deriveWorkerName } from './worker-name.ts'
 export { L1_ISOLATED_HOME } from './isolated-home.ts'
 export {

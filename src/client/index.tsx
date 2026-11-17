@@ -21,7 +21,7 @@ export {
   runComposerSubmit,
 } from './composer-submit.ts'
 
-export const name = 'dsh-plugin-deploy'
+export const name = 'dsh-plugin-safe-deploy'
 
 export const inject = ['slots', 'remote', 'remote.credentials', 'configForms']
 
@@ -34,7 +34,7 @@ export function apply(ctx: ClientContext): void {
     document.head.appendChild(tag)
     return () => tag.remove()
   })
-  const card = new DeployCardController(ctx.configForms.get('dsh-plugin-deploy'), ctx.remote.credentials)
+  const card = new DeployCardController(ctx.configForms.get('dsh-plugin-safe-deploy'), ctx.remote.credentials)
   ctx.effect(() => () => card.dispose())
 
   ctx.slots.inject('plugins.bundle.config', () => ctx.slots.register({
@@ -58,7 +58,7 @@ export function apply(ctx: ClientContext): void {
   // order 100：宿主 agent-preset=-10、subagent-catalog=10、job-list=20；负值留给静态上下文。
   ctx.slots.inject('conversation.session.header.actions', () => ctx.slots.register({
     name: 'conversation.session.header.actions',
-    id: 'dsh-plugin-deploy',
+    id: 'dsh-plugin-safe-deploy',
     order: 100,
     label: '发布',
   }, ComposerActionButton))

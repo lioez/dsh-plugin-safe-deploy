@@ -14,7 +14,7 @@ export const LEGACY_IN_PROJECT_CONFIG_NAME = '.dsh-deploy.wrangler.jsonc'
  */
 export const ASSET_IGNORE_PATTERNS = ['.wrangler', LEGACY_IN_PROJECT_CONFIG_NAME] as const
 
-export const GENERATED_CONFIG_ROOT = join(tmpdir(), 'dsh-plugin-deploy', 'generated')
+export const GENERATED_CONFIG_ROOT = join(tmpdir(), 'dsh-plugin-safe-deploy', 'generated')
 export const GENERATED_CONFIG_BASENAME = 'wrangler.jsonc'
 
 export function generatedConfigPath(projectDirectory: string): string {

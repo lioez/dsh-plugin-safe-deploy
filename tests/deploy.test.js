@@ -336,7 +336,7 @@ test('unclaimed record on disk has no claimUrl', async () => {
   const result = await runOn(host, dir)
   assert.equal(result.ok, true)
   const id = createHash('sha256').update(dir).digest('hex').slice(0, 16)
-  const raw = JSON.parse(readFileSync(join(tmpdir(), 'dsh-plugin-deploy', `${id}.json`), 'utf8'))
+  const raw = JSON.parse(readFileSync(join(tmpdir(), 'dsh-plugin-safe-deploy', `${id}.json`), 'utf8'))
   assert.equal('claimUrl' in raw, false)
   assert.equal(typeof raw.createdAt, 'string')
   assert.equal(raw.previewUrl, result.previewUrl)

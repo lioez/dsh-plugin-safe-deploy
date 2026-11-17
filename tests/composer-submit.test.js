@@ -290,7 +290,7 @@ test('apply registers conversation.session.header.actions with id and order', ()
   apply(ctx)
   const entry = registers.find(item => item.opts.name === 'conversation.session.header.actions')
   assert.ok(entry, JSON.stringify(registers.map(item => item.opts.name)))
-  assert.equal(entry.opts.id, 'dsh-plugin-deploy')
+  assert.equal(entry.opts.id, 'dsh-plugin-safe-deploy')
   assert.equal(entry.opts.order, 100)
   assert.equal(entry.component, ComposerActionButton)
   assert.equal(

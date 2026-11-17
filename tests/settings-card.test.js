@@ -305,8 +305,8 @@ test('client apply owns CSS and removes it on disposal', () => {
   const styles = []
   const document = {
     querySelector(sel) {
-      if (sel !== 'style[data-plugin-css="dsh-plugin-deploy"]') return null
-      return styles.find(el => el.dataset.pluginCss === 'dsh-plugin-deploy') ?? null
+      if (sel !== 'style[data-plugin-css="dsh-plugin-safe-deploy"]') return null
+      return styles.find(el => el.dataset.pluginCss === 'dsh-plugin-safe-deploy') ?? null
     },
     createElement() {
       return { dataset: {}, textContent: '', remove() { styles.splice(styles.indexOf(this), 1) } }
@@ -329,7 +329,7 @@ test('client apply owns CSS and removes it on disposal', () => {
   }
   loaded.exports.apply(ctx)
   assert.equal(styles.length, 1)
-  assert.equal(styles[0].dataset.pluginCss, 'dsh-plugin-deploy')
+  assert.equal(styles[0].dataset.pluginCss, 'dsh-plugin-safe-deploy')
   const css = styles[0].textContent
   assert.match(css, /\.dpd-card\b/)
   assert.match(css, /\.dpd-header\b/)
@@ -343,7 +343,7 @@ test('client apply owns CSS and removes it on disposal', () => {
   assert.match(css, /--dsw-alias-brand-primary/)
   assert.match(css, /--dsw-alias-bg-module-platform/)
   assert.match(css, /--dsw-alias-label-error/)
-  assert.equal(loaded.exports.name, 'dsh-plugin-deploy')
+  assert.equal(loaded.exports.name, 'dsh-plugin-safe-deploy')
   for (const dispose of disposers.reverse()) dispose()
   assert.equal(styles.length, 0)
 })

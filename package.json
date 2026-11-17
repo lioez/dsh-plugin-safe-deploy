@@ -1,7 +1,7 @@
 {
-  "name": "dsh-plugin-deploy",
-  "version": "0.2.2",
-  "description": "DeepSeek Harness 插件：一句话把当前项目部署到 Cloudflare",
+  "name": "dsh-plugin-safe-deploy",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness 插件：带安全预检与确认闸门的 Cloudflare 通用部署",
   "keywords": [
     "dsh",
     "dsh-plugin",
@@ -9,17 +9,19 @@
     "cloudflare",
     "workers",
     "deploy",
+    "preflight",
+    "safety",
     "publish",
     "npm",
     "wrangler"
   ],
-  "homepage": "https://github.com/Octo-o-o-o/dsh-plugin-deploy#readme",
+  "homepage": "https://github.com/lioez/dsh-plugin-safe-deploy#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Octo-o-o-o/dsh-plugin-deploy.git"
+    "url": "git+https://github.com/lioez/dsh-plugin-safe-deploy.git"
   },
   "bugs": {
-    "url": "https://github.com/Octo-o-o-o/dsh-plugin-deploy/issues"
+    "url": "https://github.com/lioez/dsh-plugin-safe-deploy/issues"
   },
   "type": "module",
   "license": "MIT",

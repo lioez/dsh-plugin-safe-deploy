@@ -12,7 +12,7 @@ export interface UnclaimedRecord {
 
 function recordPath(directory: string): string {
   const id = createHash('sha256').update(directory).digest('hex').slice(0, 16)
-  return join(tmpdir(), 'dsh-plugin-deploy', `${id}.json`)
+  return join(tmpdir(), 'dsh-plugin-safe-deploy', `${id}.json`)
 }
 
 export async function persistUnclaimed(record: UnclaimedRecord): Promise<void> {

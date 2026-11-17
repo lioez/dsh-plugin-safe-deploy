@@ -11,7 +11,7 @@ import {
 test('generated config path is under tmpdir and outside the project', () => {
   const project = '/tmp/my-static-site'
   const cfg = generatedConfigPath(project)
-  assert.equal(cfg.startsWith(join(tmpdir(), 'dsh-plugin-deploy', 'generated')), true)
+  assert.equal(cfg.startsWith(join(tmpdir(), 'dsh-plugin-safe-deploy', 'generated')), true)
   assert.equal(dirname(dirname(cfg)).startsWith(project), false)
   assert.notEqual(cfg, join(project, '.dsh-deploy.wrangler.jsonc'))
 })

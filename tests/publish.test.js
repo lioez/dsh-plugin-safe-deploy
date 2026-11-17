@@ -210,7 +210,7 @@ test('pack mode returns tarball path after checks pass', async () => {
   assert.match(packCmd, /--pack-destination /)
   assert.ok(packCmd.includes(`--pack-destination '${PACK_DEST_DIR}'`), packCmd)
   assert.equal(isAbsolute(PACK_DEST_DIR), true)
-  assert.ok(PACK_DEST_DIR.startsWith(join(tmpdir(), 'dsh-plugin-deploy')))
+  assert.ok(PACK_DEST_DIR.startsWith(join(tmpdir(), 'dsh-plugin-safe-deploy')))
   assert.equal(isAbsolute(result.tarballPath ?? ''), true)
   assert.equal(result.tarballPath, expected)
   assert.ok((result.tarballPath ?? '').startsWith(PACK_DEST_DIR))

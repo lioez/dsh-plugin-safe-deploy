@@ -13,9 +13,9 @@ import {
 
 const PACK_SAMPLE = `[
   {
-    "name":"dsh-plugin-deploy",
+    "name":"dsh-plugin-safe-deploy",
     "version":"0.1.0",
-    "filename":"dsh-plugin-deploy-0.1.0.tgz",
+    "filename":"dsh-plugin-safe-deploy-0.1.0.tgz",
     "size":21788,
     "unpackedSize":74912,
     "entryCount":6,
@@ -31,7 +31,7 @@ const PACK_SAMPLE = `[
 ]`
 
 const GOOD_PKG = {
-  name: 'dsh-plugin-deploy',
+  name: 'dsh-plugin-safe-deploy',
   version: '0.1.0',
   main: './lib/index.js',
   exports: { '.': './lib/index.js', './client': './lib/client.js' },
@@ -43,7 +43,7 @@ const GOOD_PKG = {
 }
 
 const GOOD_CLIENT = [
-  'window.__ModuleLoader__.load({ id: "dsh-plugin-deploy", factory: (require) => {',
+  'window.__ModuleLoader__.load({ id: "dsh-plugin-safe-deploy", factory: (require) => {',
   'var module = { exports: {} }; var exports = module.exports;',
   'return module.exports; } });',
 ].join('\n')
@@ -68,7 +68,7 @@ function byId(checks) {
 
 test('parseNpmPackJson reads the real dry-run array shape', () => {
   const pack = parseNpmPackJson(`npm notice\n${PACK_SAMPLE}`)
-  assert.equal(pack.filename, 'dsh-plugin-deploy-0.1.0.tgz')
+  assert.equal(pack.filename, 'dsh-plugin-safe-deploy-0.1.0.tgz')
   assert.equal(pack.size, 21788)
   assert.equal(pack.unpackedSize, 74912)
   assert.equal(pack.entryCount, 6)
@@ -104,12 +104,12 @@ test('parseScanJson keeps HIGH findings', () => {
 })
 
 test('inspectClientBundle requires loader, matching id, and module intro', () => {
-  assert.equal(inspectClientBundle(GOOD_CLIENT, 'dsh-plugin-deploy').ok, true)
-  assert.equal(inspectClientBundle('export const name = "x"', 'dsh-plugin-deploy').ok, false)
-  const wrongId = GOOD_CLIENT.replace('dsh-plugin-deploy', 'other-plugin')
-  assert.equal(inspectClientBundle(wrongId, 'dsh-plugin-deploy').ok, false)
+  assert.equal(inspectClientBundle(GOOD_CLIENT, 'dsh-plugin-safe-deploy').ok, true)
+  assert.equal(inspectClientBundle('export const name = "x"', 'dsh-plugin-safe-deploy').ok, false)
+  const wrongId = GOOD_CLIENT.replace('dsh-plugin-safe-deploy', 'other-plugin')
+  assert.equal(inspectClientBundle(wrongId, 'dsh-plugin-safe-deploy').ok, false)
   const noModule = GOOD_CLIENT.replace('var module = { exports: {} }; var exports = module.exports;', '')
-  assert.equal(inspectClientBundle(noModule, 'dsh-plugin-deploy').ok, false)
+  assert.equal(inspectClientBundle(noModule, 'dsh-plugin-safe-deploy').ok, false)
 })
 
 test('forbiddenPackReason flags the listed secret and internal paths', () => {
@@ -177,8 +177,8 @@ test('client-bundle is skipped when dsh.client is absent', () => {
 })
 
 test('resolvePublishAccess rejects restricted on unscoped packages', () => {
-  assert.equal(resolvePublishAccess('dsh-plugin-deploy', undefined).access, 'public')
+  assert.equal(resolvePublishAccess('dsh-plugin-safe-deploy', undefined).access, 'public')
   assert.equal(resolvePublishAccess('@acme/plug', undefined).access, 'public')
-  assert.equal(resolvePublishAccess('dsh-plugin-deploy', 'restricted').ok, false)
+  assert.equal(resolvePublishAccess('dsh-plugin-safe-deploy', 'restricted').ok, false)
   assert.equal(resolvePublishAccess('@acme/plug', 'restricted').ok, true)
 })

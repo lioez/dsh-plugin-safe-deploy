@@ -16,7 +16,7 @@ sandbox.globalThis = sandbox
 vm.createContext(sandbox)
 vm.runInContext(readFileSync(new URL('../lib/client.js', import.meta.url), 'utf8'), sandbox)
 const exports_ = [...reg.values()][0](spec => stubs[spec])
-if (exports_.name !== 'dsh-plugin-deploy') throw new Error(`unexpected name: ${String(exports_.name)}`)
+if (exports_.name !== 'dsh-plugin-safe-deploy') throw new Error(`unexpected name: ${String(exports_.name)}`)
 if (!Array.isArray(exports_.inject)) throw new Error('missing inject')
 if (typeof exports_.apply !== 'function') throw new Error('missing apply')
 console.log('vm-client: ok', { id: [...reg.keys()][0], name: exports_.name, inject: exports_.inject })

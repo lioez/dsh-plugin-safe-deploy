@@ -40,12 +40,12 @@ const SCAN_SCRIPT = join('.dsh-assistant', 'hooks', 'lib', 'scan-dsh-plugin.sh')
 const NPMRC_BODY = '//registry.npmjs.org/:_authToken=${DSH_NPM_TOKEN}\n'
 
 /** Isolated npm cache so pack/view/publish do not read or write ~/.npm. */
-export const NPM_CACHE_DIR = join(tmpdir(), 'dsh-plugin-deploy', 'npm-cache')
+export const NPM_CACHE_DIR = join(tmpdir(), 'dsh-plugin-safe-deploy', 'npm-cache')
 
 /** Isolated dest for `npm pack` so the tarball never lands in the plugin repo. */
-export const PACK_DEST_DIR = join(tmpdir(), 'dsh-plugin-deploy', 'packed')
+export const PACK_DEST_DIR = join(tmpdir(), 'dsh-plugin-safe-deploy', 'packed')
 
-export const NPMRC_ROOT = join(tmpdir(), 'dsh-plugin-deploy', 'npmrc')
+export const NPMRC_ROOT = join(tmpdir(), 'dsh-plugin-safe-deploy', 'npmrc')
 
 export function packedTarballPath(filename: string): string {
   return join(PACK_DEST_DIR, basename(filename))

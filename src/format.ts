@@ -11,7 +11,63 @@ export const UNSTRUCTURED_RESULT_NOTICE = '本次调用未提供结构化结果�
  * Keep this file free of Node built-ins and Host-only packages: the client
  * esbuild graph value-imports it when `presentationMeta` is absent.
  */
+function formatPreflightText(result: DeployResult): string {
+  const lines: string[] = []
+  const blocked = result.blocked ?? []
+  const review = result.review ?? []
+  const checks = result.checks ?? []
+  const topLevel = result.topLevel ?? []
+
+  lines.push(result.ok ? '部署预检通过（尚未部署）。' : '部署预检未通过（未部署）。')
+  if (result.error !== undefined) lines.push(result.error)
+  if (result.hint !== undefined && !result.ok) lines.push(result.hint)
+  if (result.projectKind !== undefined) lines.push(`项目形态：${result.projectKind}`)
+  if (result.assetsRoot !== undefined) lines.push(`发布目录：${result.assetsRoot}`)
+  if (result.workerName !== undefined) lines.push(`Worker 名：${result.workerName}`)
+  if (result.fileCount !== undefined) {
+    const size = result.totalBytes === undefined ? '' : ` / ${(result.totalBytes / 1024 / 1024).toFixed(2)} MiB`
+    lines.push(`文件：${result.fileCount} 个${size}`)
+  }
+  if (topLevel.length > 0) {
+    lines.push('', '顶层内容：')
+    for (const item of topLevel.slice(0, 10)) {
+      lines.push(`- ${item.path}：${item.files} 个文件，${(item.bytes / 1024 / 1024).toFixed(2)} MiB`)
+    }
+  }
+  if (blocked.length > 0) {
+    lines.push('', '阻止项（必须处理，不能上传）：')
+    for (const item of blocked.slice(0, 20)) lines.push(`- ${item}`)
+    if (blocked.length > 20) lines.push(`- ……还有 ${blocked.length - 20} 项`)
+  }
+  if (review.length > 0) {
+    lines.push('', '需要审查的文件/目录（不一定是秘密，但不属于典型静态产物）：')
+    for (const item of review.slice(0, 20)) lines.push(`- ${item}`)
+    if (review.length > 20) lines.push(`- ……还有 ${review.length - 20} 项`)
+  }
+  if (checks.length > 0) {
+    lines.push('', '检查项：')
+    for (const item of checks) {
+      const mark = item.level === 'block' ? '阻止' : item.level === 'warn' ? '提醒' : '通过'
+      lines.push(`- [${mark}] ${item.id}：${item.detail}`)
+    }
+  }
+  if (result.ok && result.fingerprint !== undefined) {
+    lines.push(
+      '',
+      `预检指纹：${result.fingerprint}`,
+      `下一步：让模型/人审查上面的文件清单与检查项；确认后带 confirm=${result.fingerprint} 调用 deploy。目录内容变化会使该指纹失效。`,
+    )
+  }
+  if (result.warnings.length > 0) {
+    lines.push('', '提醒：')
+    for (const warning of result.warnings) lines.push(`- ${warning}`)
+  }
+  return lines.join('\n')
+}
+
 export function formatDeployText(result: DeployResult): string {
+  if (result.preflight === true) return formatPreflightText(result)
+
   const lines: string[] = []
   if (!result.ok) {
     lines.push(`部署未完成：${result.error ?? '未知错误'}`)
@@ -49,6 +105,7 @@ export function formatTerminalOutput(result: DeployResult): string {
 
 export interface ParsedDeployText {
   ok?: boolean
+  preflight?: boolean
   mode?: DeployResult['mode']
   previewUrl?: string
   claimUrl?: string
@@ -61,6 +118,7 @@ export interface ParsedDeployText {
 
 const META_KEYS = [
   'ok',
+  'preflight',
   'mode',
   'previewUrl',
   'claimUrl',
@@ -139,9 +197,11 @@ export function parseDeployText(text: string): ParsedDeployText {
   const parsed: ParsedDeployText = { warnings: [] }
   if (text.length === 0) return parsed
 
-  if (/部署未完成/.test(text) || /ok\s*=\s*false/.test(text)) parsed.ok = false
+  if (/部署预检/.test(text)) parsed.preflight = true
+
+  if (/部署未完成|部署预检未通过/.test(text) || /ok\s*=\s*false/.test(text)) parsed.ok = false
   else if (
-    /临时预览地址已生成|已部署到你的 Cloudflare|部署完成|部署模式[：:]|ok\s*=\s*true/.test(text)
+    /临时预览地址已生成|已部署到你的 Cloudflare|部署完成|部署预检通过|部署模式[：:]|ok\s*=\s*true/.test(text)
   ) {
     parsed.ok = true
   }
@@ -213,6 +273,7 @@ export type PresentationSource = 'meta' | 'text' | 'none'
 export interface ResolvedDeployPresentation {
   source: PresentationSource
   ok: boolean
+  preflight?: boolean
   mode?: DeployResult['mode'] | string
   previewUrl?: string
   claimUrl?: string
@@ -244,6 +305,7 @@ export function resolveDeployPresentation(input: {
 }): ResolvedDeployPresentation {
   const meta = readPresentationMeta(input.meta)
   const parsed = parseDeployText(input.text)
+  const preflight = meta?.preflight === true || parsed.preflight === true
   const previewUrl = pickString(meta?.previewUrl, parsed.previewUrl)
   const claimUrl = pickString(meta?.claimUrl, parsed.claimUrl)
   const claimWithin = pickString(meta?.claimWithin, parsed.claimWithin)
@@ -278,6 +340,7 @@ export function resolveDeployPresentation(input: {
     ok,
     warnings,
     rawText: input.text,
+    ...preflight ? { preflight: true } : {},
     ...mode === undefined ? {} : { mode },
     ...previewUrl === undefined ? {} : { previewUrl },
     ...claimUrl === undefined ? {} : { claimUrl },

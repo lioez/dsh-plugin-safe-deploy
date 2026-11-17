@@ -53,6 +53,20 @@ export function DeployToolView(props: DeployViewProps) {
     <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12 }}>{rawText}</pre>
   )
 
+  if (resolved.preflight) {
+    return (
+      <article style={{ padding: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <strong>{resolved.ok ? '部署预检（尚未部署）' : '部署预检未通过'}</strong>
+        {resolved.error ? <div>{resolved.error}</div> : null}
+        {resolved.warnings.map(warning => (
+          <div key={warning}>{warning}</div>
+        ))}
+        {raw}
+        {retry}
+      </article>
+    )
+  }
+
   if (!resolved.ok) {
     return (
       <article style={{ padding: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>

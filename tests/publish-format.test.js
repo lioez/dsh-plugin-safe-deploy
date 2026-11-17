@@ -13,7 +13,7 @@ import {
 const CHECK_RESULT = {
   ok: true,
   mode: 'check',
-  packageName: 'dsh-plugin-deploy',
+  packageName: 'dsh-plugin-safe-deploy',
   version: '0.1.0',
   tag: 'latest',
   access: 'public',
@@ -22,16 +22,16 @@ const CHECK_RESULT = {
   unpackedSize: 74912,
   checks: [
     { id: 'dsh-plugin', ok: true, detail: 'dsh.bundle.patch 指向 ./cordis.patch.yml，文件存在。', blocking: true },
-    { id: 'version-available', ok: false, detail: 'dsh-plugin-deploy@0.1.0 已在 npm 上。', blocking: false },
+    { id: 'version-available', ok: false, detail: 'dsh-plugin-safe-deploy@0.1.0 已在 npm 上。', blocking: false },
   ],
-  warnings: ['dsh-plugin-deploy@0.1.0 已在 npm 上，mode=npm 会被拒绝。'],
+  warnings: ['dsh-plugin-safe-deploy@0.1.0 已在 npm 上，mode=npm 会被拒绝。'],
 }
 
 const PACK_RESULT = {
   ...CHECK_RESULT,
   mode: 'pack',
-  tarballPath: '/tmp/dsh-plugin-deploy-0.1.0.tgz',
-  installCommand: 'dsh plugin --profile <p> add /tmp/dsh-plugin-deploy-0.1.0.tgz',
+  tarballPath: '/tmp/dsh-plugin-safe-deploy-0.1.0.tgz',
+  installCommand: 'dsh plugin --profile <p> add /tmp/dsh-plugin-safe-deploy-0.1.0.tgz',
   checks: CHECK_RESULT.checks.map(item => item.id === 'version-available'
     ? item
     : { ...item, ok: true }),
@@ -40,11 +40,11 @@ const PACK_RESULT = {
 const NPM_RESULT = {
   ok: true,
   mode: 'npm',
-  packageName: 'dsh-plugin-deploy',
+  packageName: 'dsh-plugin-safe-deploy',
   version: '0.1.0',
   tag: 'latest',
   access: 'public',
-  installCommand: 'dsh plugin --profile <p> add dsh-plugin-deploy',
+  installCommand: 'dsh plugin --profile <p> add dsh-plugin-safe-deploy',
   fileCount: 6,
   packedSize: 21788,
   unpackedSize: 74912,
@@ -113,7 +113,7 @@ test('parsePublishText reads formatPublishText check output', () => {
   const parsed = parsePublishText(text)
   assert.equal(parsed.ok, true)
   assert.equal(parsed.mode, 'check')
-  assert.equal(parsed.packageName, 'dsh-plugin-deploy')
+  assert.equal(parsed.packageName, 'dsh-plugin-safe-deploy')
   assert.equal(parsed.version, '0.1.0')
   assert.equal(parsed.fileCount, 6)
   assert.equal(parsed.packedSize, 21788)
@@ -167,7 +167,7 @@ test('PublishToolView renders checks from formatPublishText when meta is missing
   })
   const text = flattenText(tree).join('\n')
   assert.match(text, /^打包完成/)
-  assert.match(text, /dsh-plugin-deploy@0.1.0/)
+  assert.match(text, /dsh-plugin-safe-deploy@0.1.0/)
   assert.match(text, /6 个文件/)
   assert.match(text, /tarball：/)
   assert.match(text, /tarball 放在临时目录/)

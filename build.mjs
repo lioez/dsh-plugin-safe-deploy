@@ -1,7 +1,7 @@
 import { mkdirSync } from 'node:fs'
 import { build } from 'esbuild'
 
-const ID = 'dsh-plugin-deploy'
+const ID = 'dsh-plugin-safe-deploy'
 
 const CLIENT_EXTERNALS = [
   'react',

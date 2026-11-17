@@ -33,10 +33,10 @@ test('client bundle registers a factory that exports name/inject/apply', () => {
   sandbox.globalThis = sandbox
   vm.createContext(sandbox)
   vm.runInContext(readFileSync('lib/client.js', 'utf8'), sandbox)
-  assert.equal(reg.has('dsh-plugin-deploy'), true)
+  assert.equal(reg.has('dsh-plugin-safe-deploy'), true)
   const exports_ = [...reg.values()][0](spec => stubs[spec])
   assert.equal(typeof exports_.name, 'string')
-  assert.equal(exports_.name, 'dsh-plugin-deploy')
+  assert.equal(exports_.name, 'dsh-plugin-safe-deploy')
   assert.ok(Array.isArray(exports_.inject))
   assert.equal(typeof exports_.apply, 'function')
 })

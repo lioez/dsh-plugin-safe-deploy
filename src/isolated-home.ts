@@ -22,7 +22,7 @@ import { join } from 'node:path'
  * L2 (token via env) must not set HOME — it should keep using the user's
  * real wrangler login when that is the chosen path.
  */
-export const L1_ISOLATED_HOME = join(tmpdir(), 'dsh-plugin-deploy', 'home')
+export const L1_ISOLATED_HOME = join(tmpdir(), 'dsh-plugin-safe-deploy', 'home')
 
 export async function ensureL1IsolatedHome(): Promise<string> {
   await mkdir(L1_ISOLATED_HOME, { recursive: true })
