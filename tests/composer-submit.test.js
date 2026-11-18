@@ -43,7 +43,7 @@ const stubs = {
     jsxs(type, props) { return { type, props } },
     Fragment: 'fragment',
   },
-  'react-dom': {},
+  'react-dom': { createPortal: children => children },
   'react-dom/client': {},
   '@deepseek-ai/cordis': {},
   '@deepseek-ai/dsh-client-ui-slots': {},
@@ -58,6 +58,7 @@ function loadClientExports() {
   const reg = new Map()
   const sandbox = {
     window: { __ModuleLoader__: { load: ({ id, factory }) => { reg.set(id, factory) } } },
+    document: { body: {} },
   }
   sandbox.globalThis = sandbox
   vm.createContext(sandbox)
